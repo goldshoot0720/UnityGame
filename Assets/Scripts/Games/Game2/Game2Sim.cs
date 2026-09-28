@@ -58,6 +58,8 @@ namespace MoeGames.Game2
         public string MsgCol = "#ffffff";
         /// <summary>User's shot meter (0..1.15), -1 idle.</summary>
         public double Meter = -1;
+        /// <summary>Meter value at which the CPU defender jumps at the user's shot (9 = no contest).</summary>
+        double defJumpAt = 9;
         /// <summary>Dead-ball pause before a check.</summary>
         public double Pause;
         public double T;
@@ -157,7 +159,11 @@ namespace MoeGames.Game2
             b.X = p.X; b.Y = p.Y; b.Z = 70; b.T = 0;
             b.Dur = 0.55 + dist / 900;
             b.Blocked = false;
-            if (blocker != null && rng() < 0.3 + blocker.B.Jump * 0.04)
+            if (p.Side == 0) contest *= Data.USER_CONTEST_SCALE;
+            double blockP = blocker == null ? 0 : p.Side == 0
+                ? Data.USER_BLOCK_BASE + blocker.B.Jump * Data.USER_BLOCK_PER_JUMP
+                : 0.3 + blocker.B.Jump * 0.04;
+            if (blocker != null && rng() < blockP)
             {
                 b.Blocked = true;
                 b.Dur = 0.18;
@@ -272,7 +278,7 @@ namespace MoeGames.Game2
                 if (k.ShootPressed && Meter < 0 && c.Z <= 0)
                 {
                     if (M.MustClear) Say("先運到三分線外清球！", "#ff9a3c", 1.0);
-                    else Meter = 0;
+                    else { Meter = 0; defJumpAt = rng() < Data.CPU_CONTEST_RATE ? 0.45 + rng() * 0.35 : 9; }
                 }
                 if (Meter >= 0)
                 {
@@ -400,7 +406,12 @@ namespace MoeGames.Game2
             var h = Holder();
             if (h == opp && think)
             {
-                if (h.Windup > 0 || Meter >= 0) { if (FD(p, h) < Data.BLOCK_RANGE + 10 && rng() < 0.5) Jump(p); }
+                if (h.Side == 0 && Meter >= 0)
+                {
+                    // One timed jump per user shot (may be early or late), not a jump every tick.
+                    if (Meter >= defJumpAt && FD(p, h) < Data.BLOCK_RANGE + 10) { Jump(p); defJumpAt = 9; }
+                }
+                else if (h.Windup > 0) { if (FD(p, h) < Data.BLOCK_RANGE + 10 && rng() < 0.5) Jump(p); }
                 else if (FD(p, h) < Data.STEAL_RANGE && rng() < 0.05 + p.B.Defense * 0.006) TrySteal(p);
             }
             if (b.Mode == BallMode.Shot && b.Shooter == opp && b.T < 0.15 && FD(p, opp) < Data.BLOCK_RANGE && think) Jump(p);

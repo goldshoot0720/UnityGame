@@ -41,6 +41,7 @@ namespace MoeGames.Tests
             Assert.Less(Match.ShotChance(150, false, 7, 0.8, 1), Match.ShotChance(150, false, 7, 0.8, 0), "contest lowers the odds");
             Assert.Greater(Match.ShotChance(200, false, 7, 1, 0), Match.ShotChance(200, false, 7, 0, 0), "good timing beats bad timing");
             Assert.IsTrue(Match.ShotChance(10, false, 10, 1, 0) <= 0.95 && Match.ShotChance(900, true, 1, 0, 1) >= 0.03, "chance stays within 3%..95%");
+            Assert.Greater(Match.ShotChance(30, false, 6, 0, Data.USER_CONTEST_SCALE), 0.4, "a tapped, contested user layup still goes in often (balance)");
             Assert.AreEqual(1, Match.MeterQuality((Data.METER_SWEET[0] + Data.METER_SWEET[1]) / 2, Data.METER_SWEET), "meter sweet spot is perfect");
             Assert.Less(Match.MeterQuality(0.2, Data.METER_SWEET), 0.2, "meter far off is poor");
         }

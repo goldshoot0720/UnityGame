@@ -73,6 +73,15 @@ namespace MoeGames.Game1
         public const double MEET_R = 34;            // batting cursor radius (scaled by meet)
         public const double CURSOR_SPEED = 520;     // batting / aiming cursor speed (units/s)
         public const double PITCH_TIME_BASE = 0.62; // seconds for a 150 km/h pitch to reach the plate
+        // Balance (Unity port): the 3D catcher view makes timing harder than the 2D original, and CPU
+        // batters were far too good (≈ .54 AVG, 2 % K in simulation). User swings get a wider timing
+        // window, a bigger meet circle and slightly slower pitches; CPU batters miss more and fielders
+        // turn some of their singles/doubles into outs (≈ .265 AVG, 23 % K).
+        public const double SWING_WINDOW = 0.11;      // CPU / base timing window (s)
+        public const double USER_SWING_WINDOW = 0.17;
+        public const double USER_MEET_BONUS = 0.12;   // extra meet radius for the user (zone units)
+        public const double USER_PITCH_SLOW = 1.2;    // pitch flight time multiplier when the user bats
+        public const double CPU_AIM_SPREAD = 1.6, CPU_TIMING_SPREAD = 1.8, CPU_HIT_TO_OUT = 0.4;
 
         public static readonly Dictionary<PitchOutcome, string> OUTCOME_TEXT = new Dictionary<PitchOutcome, string>
         {
@@ -309,16 +318,19 @@ namespace MoeGames.Game1
 
         /// <summary>Resolve a swing. timing = swing error in seconds (negative = early),
         /// dist = distance from the meet cursor centre to the ball (zone units).</summary>
-        public static PitchOutcome ResolveSwing(Player batter, double timing, double dist, Func<double> rng)
+        public static double MeetRadius(Player batter, double bonus = 0) => 0.35 + batter.Meet / 220.0 + bonus;
+
+        public static PitchOutcome ResolveSwing(Player batter, double timing, double dist, Func<double> rng,
+            double window = Data.SWING_WINDOW, double meetBonus = 0)
         {
-            double meetR = 0.35 + batter.Meet / 220.0;         // zone units covered by the cursor
-            if (dist > meetR || Math.Abs(timing) > 0.11) return PitchOutcome.Strike;
+            double meetR = MeetRadius(batter, meetBonus);       // zone units covered by the cursor
+            if (dist > meetR || Math.Abs(timing) > window) return PitchOutcome.Strike;
             double aim = 1 - dist / meetR;                      // 0 edge … 1 sweet spot
-            double time = 1 - Math.Abs(timing) / 0.11;
+            double time = 1 - Math.Abs(timing) / window;
             double q = aim * 0.55 + time * 0.45;                // contact quality 0..1
             if (q < 0.22) return PitchOutcome.Foul;
             // Launch: early swings pull, late ones slice foul more often.
-            if (Math.Abs(timing) > 0.08 && rng() < 0.55) return PitchOutcome.Foul;
+            if (Math.Abs(timing) > window * 0.73 && rng() < 0.55) return PitchOutcome.Foul;
             double power = q * (0.55 + batter.Power / 160.0) + (rng() - 0.5) * 0.18;
             double r = rng();
             if (power > 1.02) return PitchOutcome.Homerun;
@@ -340,9 +352,13 @@ namespace MoeGames.Game1
             if (rng() >= swingP) return zone ? PitchOutcome.Strike : PitchOutcome.Ball;
             // Harder to square up fast pitches, big breaks and corners.
             double difficulty = (pitch.Kmh - 120) / 60 + breakAmt * 0.25 + (zone ? edge * 0.25 : 0.5);
-            double dist = Math.Max(0, (rng() * 0.9) * (0.55 + difficulty * 0.5) - batter.Meet / 400.0);
-            double timing = (rng() * 2 - 1) * (0.05 + difficulty * 0.05);
-            return ResolveSwing(batter, timing, dist, rng);
+            double dist = Math.Max(0, (rng() * 0.9) * (0.55 + difficulty * 0.5) * Data.CPU_AIM_SPREAD - batter.Meet / 400.0);
+            double timing = (rng() * 2 - 1) * (0.05 + difficulty * 0.05) * Data.CPU_TIMING_SPREAD;
+            var o = ResolveSwing(batter, timing, dist, rng);
+            // Fielders get to some of the CPU's balls in play.
+            if (o == PitchOutcome.Single && rng() < Data.CPU_HIT_TO_OUT) return PitchOutcome.Groundout;
+            if (o == PitchOutcome.Double && rng() < Data.CPU_HIT_TO_OUT * 0.5) return PitchOutcome.Flyout;
+            return o;
         }
 
         /// <summary>CPU pitcher: picks a pitch and an aim point.</summary>

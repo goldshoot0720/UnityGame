@@ -38,6 +38,13 @@ namespace MoeGames.Game2
         public const double BLOCK_RANGE = 44;
         public const double METER_TIME = 0.9;     // seconds for the shot meter to fill
         public static readonly double[] METER_SWEET = { 0.78, 0.92 };
+        // Balance (Unity port): CPU defenders used to re-jump every AI tick while the user charged a
+        // shot (≈ 1 s of airtime), so nearly every user shot was blocked and inside shots were always
+        // fully contested. Now a defender contests only some shots with one timed jump, and user shots
+        // are harder to block and less affected by a hand in the face.
+        public const double CPU_CONTEST_RATE = 0.5;    // share of user shots a CPU defender jumps at
+        public const double USER_BLOCK_BASE = 0.12, USER_BLOCK_PER_JUMP = 0.025;   // CPU shots: 0.3 + jump × 0.04
+        public const double USER_CONTEST_SCALE = 0.6;
     }
 
     /// <summary>3x3 match rules — score, clocks, possession and the "clear the ball" rule.
@@ -117,7 +124,8 @@ namespace MoeGames.Game2
             else if (!three) b = 0.62 - (dist - 60) / 600;
             else b = 0.44 - Math.Max(0, dist - 240) / 500;
             double sk = (skill - 5) * 0.035;
-            double tm = (timing - 0.6) * 0.45;
+            // Layups depend less on meter timing than jumpers (a quick tap under the rim still has a chance).
+            double tm = (timing - 0.6) * (dist < 60 ? 0.2 : 0.45);
             double p = (b + sk + tm) * (1 - contest * 0.45);
             return Math.Max(0.03, Math.Min(0.95, p));
         }

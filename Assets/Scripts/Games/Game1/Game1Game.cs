@@ -256,7 +256,8 @@ namespace MoeGames.Game1
             timer = WINDUP;
             flightT = 0;
             pitcherView.Act("throw", WINDUP + 0.2f);
-            if (!UserBatting) cpuResult = Sim.CpuBat(gs.Batter, pitch, Rand.Default);
+            if (UserBatting) pitch.Time *= Data.USER_PITCH_SLOW;
+            else cpuResult = Sim.CpuBat(gs.Batter, pitch, Rand.Default);
         }
 
         void FinishPitch(PitchOutcome o)
@@ -395,12 +396,12 @@ namespace MoeGames.Game1
                         if (UserBatting)
                         {
                             if (!swung && (act || click)) Swing(flightT);
-                            if (swung && flightT >= pt.Time && System.Math.Abs(swingAt - pt.Time) <= 0.11)
+                            if (swung && flightT >= pt.Time && System.Math.Abs(swingAt - pt.Time) <= Data.USER_SWING_WINDOW)
                             {
                                 double dist = Js.Hypot(cur.x - pt.EndX, cur.y - pt.EndY);
-                                FinishPitch(Sim.ResolveSwing(gs.Batter, swingAt - pt.Time, dist, Rand.Default));
+                                FinishPitch(Sim.ResolveSwing(gs.Batter, swingAt - pt.Time, dist, Rand.Default, Data.USER_SWING_WINDOW, Data.USER_MEET_BONUS));
                             }
-                            else if (flightT >= pt.Time + 0.12)
+                            else if (flightT >= pt.Time + Data.USER_SWING_WINDOW + 0.01)
                                 FinishPitch(swung ? PitchOutcome.Strike : Sim.InZone(pt.EndX, pt.EndY) ? PitchOutcome.Strike : PitchOutcome.Ball);
                         }
                         else
@@ -540,10 +541,20 @@ namespace MoeGames.Game1
             var cw = Gui.WorldToGui(Cam, ZoneToWorld(cur.x, cur.y));
             if (UserBatting && phase != Phase.Half)
             {
-                float rr = (float)((0.35 + gs.Batter.Meet / 220.0) * zw / 2);
+                float rr = (float)(Sim.MeetRadius(gs.Batter, Data.USER_MEET_BONUS) * zw / 2);
                 Gui.Circle(cw.x, cw.y, rr, Js.Hex("#ffe066", 0.22f));
                 Gui.Ring(cw.x, cw.y, rr, 3, Js.Hex("#ffcc00", 0.95f));
                 Gui.Circle(cw.x, cw.y, 4, Js.Hex("#ff3300"));
+                // Timing aid: a ring closes in on the ball and turns green while a swing can connect.
+                if (phase == Phase.Flight && pitch != null && !swung && ball.gameObject.activeSelf)
+                {
+                    float tt = Mathf.Clamp01((float)(flightT / pitch.Time));
+                    var bp = Gui.WorldToGui(Cam, ball.position);
+                    bool inWindow = System.Math.Abs(flightT - pitch.Time) <= Data.USER_SWING_WINDOW;
+                    Gui.Ring(bp.x, bp.y, Mathf.Lerp(zw * 0.9f, zw * 0.07f, tt), inWindow ? 5 : 3,
+                        inWindow ? Js.Hex("#44ff66", 0.95f) : new Color(1, 1, 1, 0.55f));
+                    if (inWindow) Gui.Label("揮棒！", cw.x, cw.y - rr - 18, 22, Js.Hex("#44ff66"), 0.5f, 0.5f, Color.black);
+                }
             }
             else if (!UserBatting && phase == Phase.Aim)
             {

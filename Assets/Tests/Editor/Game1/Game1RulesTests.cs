@@ -70,5 +70,35 @@ namespace MoeGames.Tests
             Assert.IsTrue(Sim.InZone(0.9, -0.9) && !Sim.InZone(1.2, 0), "zone test");
             Assert.IsTrue(Data.TEAMS.Values.All(t => t.Lineup.Length == 4 && Data.PLAYERS[t.Pitcher].Pitches.All(n => Data.PITCH_TYPES.ContainsKey(n))), "every team has 4 players & a pitcher with pitches");
         }
+
+        [Test]
+        public void CpuBattingIsBeatable()
+        {
+            // Balance guard: CPU batters facing typical pitches should hit roughly .20–.33 and strike out sometimes.
+            var rng = Rand.Seeded(7);
+            var batters = Data.PLAYERS.Values.ToArray();
+            int pa = 0, hits = 0, ks = 0;
+            for (int n = 0; n < 6000; n++)
+            {
+                var batter = batters[n % batters.Length];
+                var pitcher = Data.PLAYERS[n % 2 == 0 ? "whale" : "whitecat"];
+                int balls = 0, strikes = 0;
+                while (true)
+                {
+                    var type = pitcher.Pitches[(int)(rng() * pitcher.Pitches.Length)];
+                    var o = Sim.CpuBat(batter, Sim.MakePitch(pitcher, type, (rng() * 2 - 1) * 0.85, (rng() * 2 - 1) * 0.85, rng), rng);
+                    if (o == PitchOutcome.Ball) { if (++balls == 4) break; continue; }
+                    if (o == PitchOutcome.Strike) { if (++strikes == 3) { ks++; break; } continue; }
+                    if (o == PitchOutcome.Foul) { strikes = Math.Min(2, strikes + 1); continue; }
+                    if (Data.HitBases(o) > 0) hits++;
+                    break;
+                }
+                pa++;
+            }
+            double avg = (double)hits / pa, k = (double)ks / pa;
+            Assert.IsTrue(avg > 0.2 && avg < 0.33, $"CPU hit rate {avg:F3}");
+            Assert.IsTrue(k > 0.12 && k < 0.35, $"CPU strikeout rate {k:F3}");
+            Assert.IsTrue(Sim.ResolveSwing(Data.PLAYERS["penguin"], 0.15, 0, Rand.Seq(0.5), Data.USER_SWING_WINDOW, Data.USER_MEET_BONUS) != PitchOutcome.Strike, "user window forgives a 0.15 s timing error");
+        }
     }
 }
