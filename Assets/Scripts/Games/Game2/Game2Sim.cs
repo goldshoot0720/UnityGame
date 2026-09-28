@@ -44,6 +44,8 @@ namespace MoeGames.Game2
     public class Sim
     {
         const double GRAV = 900;
+        /// <summary>Seconds an AI shooter gathers (dip → set point) before the release.</summary>
+        public const double SHOT_WINDUP = 0.42;
         static readonly (double x, double y)[] OFF_SPOTS =
         {
             (318, 468), (706, 468), (512, 568), (420, 430), (604, 430), (250, 420), (774, 420),
@@ -132,7 +134,7 @@ namespace MoeGames.Game2
                 if (p.Side == 0) Say("先運到三分線外清球！", "#ff9a3c", 1.0);
                 return;
             }
-            p.Windup = 0.42;
+            p.Windup = SHOT_WINDUP;
         }
 
         static double FD(P a, P b) => Court.FloorDist(a.X, a.Y, b.X, b.Y);

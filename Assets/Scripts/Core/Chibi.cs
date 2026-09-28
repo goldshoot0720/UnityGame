@@ -34,6 +34,13 @@ namespace MoeGames
         readonly List<Renderer> renderers = new List<Renderer>();
         public bool UsingModel => Model != null && Model.name != "Fallback";
 
+        /// <summary>A humanoid bone of the model (null for the fallback body or a non-humanoid rig),
+        /// for procedural poses applied in LateUpdate on top of the playing clip.</summary>
+        public Transform Bone(HumanBodyBones b) => animator && animator.isHuman ? animator.GetBoneTransform(b) : null;
+
+        /// <summary>Re-apply the current animation pose immediately (undoing procedural bone edits).</summary>
+        public void Resample() { if (graph.IsValid()) graph.Evaluate(0); }
+
         /// <summary>Create a character under <paramref name="parent"/>.</summary>
         public static Chibi Spawn(string id, Transform parent, Vector3 localPos, float height = 1.6f, string scope = null)
         {

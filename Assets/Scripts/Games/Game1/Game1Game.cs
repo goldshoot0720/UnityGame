@@ -18,6 +18,8 @@ namespace MoeGames.Game1
         enum Phase { Ready, Aim, Windup, Flight, Result, Half }
 
         const float WINDUP = 0.7f;
+        /// <summary>Seconds from starting a swing to the bat crossing the zone.</summary>
+        const float SwingToContact = 0.08f;
         const float RESULT_TIME = 1.9f;
         // Strike zone in world units (at the plate plane z = 0).
         const float ZoneHalfW = 0.26f, ZoneHalfH = 0.32f, ZoneCY = 0.78f;
@@ -52,6 +54,7 @@ namespace MoeGames.Game1
         // 3D
         Chibi[] lineup;
         Chibi pitcherView, batterView;
+        Batter batter;
         readonly Chibi[] runners = new Chibi[3];
         readonly List<Chibi> fielders = new List<Chibi>();
         Transform bat, batPivot, ball, hitBall;
@@ -88,6 +91,11 @@ namespace MoeGames.Game1
             lineup = ShowLineup(ids, "#2f7d32", "#e8d8b0", 1.3f);
             for (int i = 0; i < lineup.Length; i++) lineup[i].transform.localPosition += new Vector3(i < 4 ? -0.5f : 0.5f, 0, 0);
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor tooling: skip the title and team select.</summary>
+        public void DebugPlay() => GoPlay();
+#endif
 
         void GoPlay()
         {
@@ -153,9 +161,14 @@ namespace MoeGames.Game1
             hitBall = Prim.Sphere(f, Vector3.zero, 0.14f, Color.white).transform;
             hitBall.gameObject.SetActive(false);
             batPivot = Prim.Empty("BatPivot", f, new Vector3(-0.55f, 1.05f, 0.05f)).transform;
-            var batGo = Prim.Cyl(batPivot, new Vector3(0, 0, 0.45f), 0.07f, 0.9f, Js.Hex("#e0a96a"));
-            batGo.transform.localRotation = Quaternion.Euler(90, 0, 0);
-            bat = batGo.transform;
+            var wood = Js.Hex("#e0a96a");
+            var handle = Prim.Cyl(batPivot, new Vector3(0, 0, 0.2f), 0.036f, 0.5f, Js.Hex("#c98f52"));
+            handle.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            var barrel = Prim.Cyl(batPivot, new Vector3(0, 0, 0.64f), 0.066f, 0.46f, wood);
+            barrel.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            var knob = Prim.Cyl(batPivot, new Vector3(0, 0, -0.05f), 0.055f, 0.03f, Js.Hex("#8a5a2b"));
+            knob.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            bat = barrel.transform;
             shownPitcher = shownBatter = null;
             Rig.Set(new Vector3(0, 1.45f, -3.2f), new Vector3(0, 1.05f, 6f), 42f);
         }
@@ -165,7 +178,7 @@ namespace MoeGames.Game1
             if (shownPitcher != gs.Pitcher.Id)
             {
                 if (pitcherView) Destroy(pitcherView.gameObject);
-                pitcherView = SpawnChar(gs.Pitcher.Id, Mound + Vector3.up * 0.05f, 1.6f);
+                pitcherView = SpawnChar(gs.Pitcher.Id, Mound + Vector3.down * 0.05f, 1.6f); // feet on the mound top (y 0.2)
                 pitcherView.Face(Vector3.back);
                 shownPitcher = gs.Pitcher.Id;
                 foreach (var fl in fielders) if (fl) Destroy(fl.gameObject);
@@ -186,6 +199,7 @@ namespace MoeGames.Game1
                 batterView = SpawnChar(gs.Batter.Id, new Vector3(-0.95f, 0.05f, 0.1f), 1.6f);
                 batterView.Face(Vector3.right);
                 shownBatter = gs.Batter.Id;
+                batter = Batter.Attach(batterView, batPivot);
             }
             // Runners stand on occupied bases (ids are the previous batters, for show).
             var lu = gs.BattingTeam.Lineup;
@@ -237,6 +251,8 @@ namespace MoeGames.Game1
             cpuResult = null;
             cpuSwingShown = false;
             RefreshPlayers();
+            if (batter) batter.enabled = true;
+            batPivot.gameObject.SetActive(true);
             if (UserBatting)
             {
                 phase = Phase.Ready;
@@ -282,10 +298,16 @@ namespace MoeGames.Game1
                 hitBall.gameObject.SetActive(true);
             }
             else Sfx.Play("mitt");
-            if (o == PitchOutcome.Homerun) { Sfx.Play("cheer"); Rig.Shake(0.15f, 0.5f); batterView.Act("win", 1.2f); }
-            else if (Data.HitBases(o) > 0) { Sfx.Play("cheer"); batterView.Act("hop", 0.5f); }
-            if (gs.LastNote.StartsWith("三振")) { Sfx.Notes("E5 C5", 0.09f, Wave.Triangle, 0.4f); batterView.Act("lose", 0.8f); }
+            if (o == PitchOutcome.Homerun) { Sfx.Play("cheer"); Rig.Shake(0.15f, 0.5f); DropBat(); batterView.Act("win", 1.2f); }
+            else if (Data.HitBases(o) > 0) { Sfx.Play("cheer"); DropBat(); batterView.Act("hop", 0.5f); }
+            if (gs.LastNote.StartsWith("三振")) { Sfx.Notes("E5 C5", 0.09f, Wave.Triangle, 0.4f); DropBat(); batterView.Act("lose", 0.8f); }
             halfChanged = beforeHalf != $"{gs.Inning}{gs.Top}";
+        }
+
+        /// <summary>The batter lets go of the bat for a celebration / dejection clip.</summary>
+        void DropBat()
+        {
+            if (batter && batter.Rigged) { batter.enabled = false; batPivot.gameObject.SetActive(false); }
         }
 
         bool CpuSwings(PitchOutcome o)
@@ -361,6 +383,10 @@ namespace MoeGames.Game1
                 cur.y = Mathf.Clamp(cur.y, -lim, lim);
             }
             lastMouse = In.MousePos;
+            // Auto-tracking: while the pitch is in flight the meet circle glides to where the ball will
+            // cross the plate, so batting is all about timing the swing.
+            if (UserBatting && phase == Phase.Flight && !swung && pitch != null)
+                cur = Vector2.Lerp(cur, new Vector2((float)pitch.EndX, (float)pitch.EndY), 1 - Mathf.Exp(-9f * dt));
 
             switch (phase)
             {
@@ -407,7 +433,7 @@ namespace MoeGames.Game1
                         else
                         {
                             var o = cpuResult.Value;
-                            if (CpuSwings(o) && !cpuSwingShown && flightT >= pt.Time - 0.06) { cpuSwingShown = true; swingAnim = 0; }
+                            if (CpuSwings(o) && !cpuSwingShown && flightT >= pt.Time - SwingToContact) { cpuSwingShown = true; swingAnim = 0; }
                             if (flightT >= pt.Time) FinishPitch(o);
                         }
                         break;
@@ -430,9 +456,26 @@ namespace MoeGames.Game1
         void Animate3D()
         {
             // Bat swing: from cocked over the shoulder to through the zone.
-            float sw = swingAnim >= 0 ? Mathf.Clamp01(swingAnim / 0.2f) : 0;
-            batPivot.localRotation = Quaternion.Euler(Mathf.Lerp(-60f, 5f, sw), Mathf.Lerp(-100f, 70f, sw), 0);
-            if (batterView) batterView.transform.localRotation = Quaternion.Euler(0, 90 + Mathf.Lerp(0, 50, sw), 0);
+            if (batter && batter.Rigged)
+            {
+                // Humanoid batter: hands on the bat, stance → load (during the windup) → swing.
+                float s;
+                if (swingAnim >= 0)
+                    s = swingAnim < SwingToContact ? 0.25f + 0.25f * swingAnim / SwingToContact
+                        : 0.5f + 0.5f * Mathf.Clamp01((swingAnim - SwingToContact) / 0.3f);
+                else if (phase == Phase.Windup) s = 0.25f * Mathf.Clamp01(1 - timer / WINDUP);
+                else if (phase == Phase.Flight) s = 0.25f;
+                else if (phase == Phase.Result) s = 0.12f;
+                else s = 0;
+                batter.Swing = s;
+                batter.LookAt = ball.gameObject.activeSelf ? ball.position : pitcherView ? pitcherView.transform.position + Vector3.up * 1.2f : Mound;
+            }
+            else
+            {
+                float sw = swingAnim >= 0 ? Mathf.Clamp01(swingAnim / 0.2f) : 0;
+                batPivot.localRotation = Quaternion.Euler(Mathf.Lerp(-60f, 5f, sw), Mathf.Lerp(-100f, 70f, sw), 0);
+                if (batterView) batterView.transform.localRotation = Quaternion.Euler(0, 90 + Mathf.Lerp(0, 50, sw), 0);
+            }
 
             // Pitched ball.
             if (pitch != null && phase == Phase.Flight)
@@ -630,7 +673,7 @@ namespace MoeGames.Game1
                 Gui.Label("滑鼠/方向鍵瞄準　數字鍵選球種　點擊或 Space 投球", W / 2, H - 96, 18, Color.white, 0.5f, 0.5f, Color.black);
             }
             else if (UserBatting && (phase == Phase.Ready || phase == Phase.Windup || phase == Phase.Flight))
-                Gui.Label("滑鼠/方向鍵移動打擊圈　點擊或 Space 揮棒", W / 2, H - 30, 20, Color.white, 0.5f, 0.5f, Color.black);
+                Gui.Label("打擊圈會自動跟球　看圓圈變綠時 點擊或 Space 揮棒", W / 2, H - 30, 20, Color.white, 0.5f, 0.5f, Color.black);
 
             if (phase == Phase.Half)
                 Gui.Banner(halfBanner, UserBatting ? "你的攻擊！看準球路揮棒" : "你的防守！選球種、瞄準、投球");

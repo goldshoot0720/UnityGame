@@ -30,6 +30,7 @@ namespace MoeGames.Game2
         readonly Dictionary<P, Chibi> views = new Dictionary<P, Chibi>();
         readonly Dictionary<P, GameObject> rings = new Dictionary<P, GameObject>();
         readonly Dictionary<P, Vector3> lastPos = new Dictionary<P, Vector3>();
+        readonly Dictionary<P, ShotView> shots = new Dictionary<P, ShotView>();
         Transform ballT, marker;
 
         protected override void Begin()
@@ -90,6 +91,7 @@ namespace MoeGames.Game2
             views.Clear();
             rings.Clear();
             lastPos.Clear();
+            shots.Clear();
             var f = World;
             Prim.Box(f, new Vector3(0, -0.1f, -8), new Vector3(34, 0.2f, 26), Js.Hex("#3b3346"));
             var floor = Prim.Box(f, new Vector3(0, -0.02f, -6.5f), new Vector3(18, 0.06f, 15.5f), Js.Hex("#c77b3a"));
@@ -139,6 +141,14 @@ namespace MoeGames.Game2
                 lastPos[p] = ToW(p.X, p.Y);
             }
             ballT = Prim.Sphere(f, Vector3.zero, 0.26f, Js.Hex("#f07a1e")).transform;
+            foreach (var p in sim.Ps)
+            {
+                var sh = Shooter.Attach(views[p]);
+                if (!sh.Rigged) { Destroy(sh); continue; }
+                sh.Ball = ballT;
+                sh.LookAt = ToW(Court.HOOP_X, Court.HOOP_Y, Court.RIM_HEIGHT);
+                shots[p] = new ShotView { S = sh };
+            }
             marker = Prim.Box(f, Vector3.zero, new Vector3(0.25f, 0.25f, 0.25f), Js.Hex("#39c6ff")).transform;
             Prim.SetColor(marker.gameObject, Js.Hex("#39c6ff"), true);
             Rig.Set(new Vector3(0, 7.5f, -21f), new Vector3(0, 1.2f, -5.5f), 42f);
@@ -207,7 +217,8 @@ namespace MoeGames.Game2
                 else if (sim.M.Possession == p.Side) c.FaceSmooth(hoop - ground, 6f, dt);
                 else c.FaceSmooth(ToW(sim.Ball.X, sim.Ball.Y) - ground, 6f, dt);
                 c.SetLoop(p.Moving ? Chibi.Loop.Run : Chibi.Loop.Idle, 1.2f);
-                if (p.Windup > 0 && !c.Busy) c.Act("jump", 0.45f);
+                if (shots.TryGetValue(p, out var sv)) DriveShot(p, sv, dt);
+                else if (p.Windup > 0 && !c.Busy) c.Act("jump", 0.45f);
             }
             var b = sim.Ball;
             ballT.gameObject.SetActive(!(b.Mode == BallMode.Dead && sim.Pause <= 0));
@@ -219,6 +230,44 @@ namespace MoeGames.Game2
             // Follow the play a little.
             float bx = (float)(b.X - 512) * K;
             Rig.Follow(new Vector3(bx * 0.35f, 7.5f, -21f), new Vector3(bx * 0.5f, 1.2f, -5.5f), 3f, dt);
+        }
+
+        /// <summary>Per-player jump-shot state for the procedural <see cref="Shooter"/> pose.</summary>
+        class ShotView
+        {
+            public Shooter S;
+            public bool Gathering;
+            public float ReleaseT = -1;
+        }
+
+        /// <summary>Gather (dip → set point) while the AI winds up or the user fills the meter, then
+        /// release, hold the follow-through until landing and blend back to the clip.</summary>
+        void DriveShot(P p, ShotView v, float dt)
+        {
+            var b = sim.Ball;
+            var s = v.S;
+            bool holding = b.Mode == BallMode.Held && b.Holder == p;
+            bool gathering = holding && (p.Windup > 0 || (p == sim.Ctrl && sim.Meter >= 0));
+            if (gathering)
+            {
+                // The set point is reached as the meter hits its sweet spot: release when the ball is up.
+                double sweet = (Data.METER_SWEET[0] + Data.METER_SWEET[1]) / 2;
+                double g = p.Windup > 0 ? 1 - p.Windup / Sim.SHOT_WINDUP : sim.Meter / sweet;
+                s.Shot = Shooter.SetPoint * Mathf.Clamp01((float)g);
+                v.ReleaseT = -1;
+            }
+            else if (v.Gathering && b.Mode == BallMode.Shot && b.Shooter == p) v.ReleaseT = 0;
+            v.Gathering = gathering;
+            if (v.ReleaseT >= 0)
+            {
+                v.ReleaseT += dt;
+                s.Shot = Mathf.Lerp(Shooter.SetPoint, 1f, Mathf.Clamp01(v.ReleaseT / 0.22f));
+                if (p.Z <= 0 && v.ReleaseT > 0.5f) v.ReleaseT = -1;
+            }
+            bool active = gathering || v.ReleaseT >= 0;
+            s.Weight = Mathf.MoveTowards(s.Weight, active ? 1f : 0f, dt / (active ? 0.1f : 0.25f));
+            s.CarryBall = gathering;
+            s.Airborne = p.Z > 1;
         }
 
         // ── GUI ──
