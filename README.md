@@ -25,6 +25,10 @@
 
 每款遊戲都有 **遊戲指南／攻略**：遊戲內按 **G** 或點「遊戲指南」開啟，文字版在 [`Docs/Guides/`](Docs/Guides/)。
 
+## 線上遊玩
+
+**https://goldshoot0720.github.io/UnityGame/** （免下載，電腦與手機瀏覽器皆可，手機請橫向）
+
 ## 下載遊玩
 
 到 [Releases](https://github.com/goldshoot0720/UnityGame/releases) 下載：
