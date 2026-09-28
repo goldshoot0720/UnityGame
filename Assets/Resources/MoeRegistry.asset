@@ -1,0 +1,646 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f372a5895b1b4c8a90f3a95c5ded96f, type: 3}
+  m_Name: MoeRegistry
+  m_EditorClassIdentifier: MoeGames.Core::MoeGames.MoeRegistry
+  characters:
+  - id: whale
+    model: {fileID: 919132149155446097, guid: 49f01d7b5d3de4d5d9b6112e8dd733c1, type: 3}
+    pose: {fileID: -203655887218126122, guid: 49f01d7b5d3de4d5d9b6112e8dd733c1, type: 3}
+  - id: penguin
+    model: {fileID: 919132149155446097, guid: b092f9ad146474b15903d0b017cdc962, type: 3}
+    pose: {fileID: -203655887218126122, guid: b092f9ad146474b15903d0b017cdc962, type: 3}
+  - id: glasses
+    model: {fileID: 919132149155446097, guid: 3a7152689a6a14d6095a993481117321, type: 3}
+    pose: {fileID: -203655887218126122, guid: 3a7152689a6a14d6095a993481117321, type: 3}
+  - id: tshirt
+    model: {fileID: 919132149155446097, guid: eae1c07f70376422ca49302e94000711, type: 3}
+    pose: {fileID: -203655887218126122, guid: eae1c07f70376422ca49302e94000711, type: 3}
+  - id: calico
+    model: {fileID: 919132149155446097, guid: 8445477e31c0d4b84bd867cd5f22f3cd, type: 3}
+    pose: {fileID: -203655887218126122, guid: 8445477e31c0d4b84bd867cd5f22f3cd, type: 3}
+  - id: whitecat
+    model: {fileID: 919132149155446097, guid: a0e2541d249b047fb9d0570f4692604a, type: 3}
+    pose: {fileID: -203655887218126122, guid: a0e2541d249b047fb9d0570f4692604a, type: 3}
+  - id: redcat
+    model: {fileID: 919132149155446097, guid: 201cf518f55d84da6a53d6726fb5ef08, type: 3}
+    pose: {fileID: -203655887218126122, guid: 201cf518f55d84da6a53d6726fb5ef08, type: 3}
+  - id: sailor
+    model: {fileID: 919132149155446097, guid: 3d902708dc1674015bc29465b9fb236d, type: 3}
+    pose: {fileID: -203655887218126122, guid: 3d902708dc1674015bc29465b9fb236d, type: 3}
+  animations:
+  - name: any_attack
+    scope: Shared
+    clip: {fileID: 7400000, guid: 5cbe5cbc99afe4aee9d2fbd287bcedae, type: 2}
+  - name: any_cast
+    scope: Shared
+    clip: {fileID: 7400000, guid: 21db6f85af73d45b78cb1b7dbbd0cb15, type: 2}
+  - name: any_down
+    scope: Shared
+    clip: {fileID: 7400000, guid: 95bf281759fc84d52bca801954b153bc, type: 2}
+  - name: any_hit
+    scope: Shared
+    clip: {fileID: 7400000, guid: 22c168286ade04a65864366f31f40e90, type: 2}
+  - name: any_idle
+    scope: Shared
+    clip: {fileID: 7400000, guid: e3839fd1d02c149bda3dcc04f5818967, type: 2}
+  - name: any_jump
+    scope: Shared
+    clip: {fileID: 7400000, guid: d5720afb6b0d4484eaf8e2f4ee555d6e, type: 2}
+  - name: any_lose
+    scope: Shared
+    clip: {fileID: 7400000, guid: aade533fdb99543689b7aae141ccf2bb, type: 2}
+  - name: any_run
+    scope: Shared
+    clip: {fileID: 7400000, guid: 74ce84d9612314ba4b7ccadaa3f9ac20, type: 2}
+  - name: any_swing
+    scope: Shared
+    clip: {fileID: 7400000, guid: cc26dbf66fef34a5d9ae65aea6f0d090, type: 2}
+  - name: any_throw
+    scope: Shared
+    clip: {fileID: 7400000, guid: 62555e16e462c49519ec4d697150921b, type: 2}
+  - name: any_win
+    scope: Shared
+    clip: {fileID: 7400000, guid: f9fcfa798d2864cc59b9dcc7c420b79b, type: 2}
+  audio:
+  - name: music
+    scope: Game1
+    clip: {fileID: 8300000, guid: 92144686fdfd2441282fde3c470d9e74, type: 3}
+  - name: music
+    scope: Game2
+    clip: {fileID: 8300000, guid: 10ee4f046e2f345f19876bb40a93fa93, type: 3}
+  - name: music
+    scope: Game3
+    clip: {fileID: 8300000, guid: 5e5f926797f0d45b59ae6ceb6187462c, type: 3}
+  - name: boss_music
+    scope: Game4
+    clip: {fileID: 8300000, guid: a2859a77abfd34c12961c37a2e2f9614, type: 3}
+  - name: stage_music
+    scope: Game4
+    clip: {fileID: 8300000, guid: 745ee3c77c0b64df18bec8a607b16e9f, type: 3}
+  - name: music
+    scope: Game5
+    clip: {fileID: 8300000, guid: 9d1e05d94b43c454aabe3b45cc1a6051, type: 3}
+  - name: music
+    scope: Game6
+    clip: {fileID: 8300000, guid: b5b73809dc98d43679f026c3acce25a6, type: 3}
+  - name: music
+    scope: Game7
+    clip: {fileID: 8300000, guid: 44bef33e1d5aa4f14a426c4efbd5b394, type: 3}
+  - name: music
+    scope: Game8
+    clip: {fileID: 8300000, guid: 9bcc5b3aeec654e23b2a7c489f8144a7, type: 3}
+  - name: music
+    scope: Game9
+    clip: {fileID: 8300000, guid: 2939cbcee97f745aba62eb1e0967c668, type: 3}
+  - name: music
+    scope: Game10
+    clip: {fileID: 8300000, guid: 38a63fd4e06ce48b2ad4e7e232bdd570, type: 3}
+  - name: music
+    scope: Game11
+    clip: {fileID: 8300000, guid: 78917dd542ffc45c0b585725102bf37e, type: 3}
+  - name: music
+    scope: Game12
+    clip: {fileID: 8300000, guid: 462225fcd86dd4ff3af897888e626d3f, type: 3}
+  - name: cheer
+    scope: Game1
+    clip: {fileID: 8300000, guid: fd41d5d797bb842c1a15b8d52308efba, type: 3}
+  - name: crack
+    scope: Game1
+    clip: {fileID: 8300000, guid: 4bfd2929e20ee49c588f2b90fb7f67ff, type: 3}
+  - name: mitt
+    scope: Game1
+    clip: {fileID: 8300000, guid: f6d859f7015504cc69887b93dadd0768, type: 3}
+  - name: music
+    scope: Game1
+    clip: {fileID: 8300000, guid: 1d3a7ccd95fd94cf69405fd551a31c57, type: 3}
+  - name: whoosh
+    scope: Game1
+    clip: {fileID: 8300000, guid: 24562c37977dd4494bb91fb2b3316ece, type: 3}
+  - name: block
+    scope: Game2
+    clip: {fileID: 8300000, guid: 594849dbbc6dc4e94bfcce356e1cb1bc, type: 3}
+  - name: bounce
+    scope: Game2
+    clip: {fileID: 8300000, guid: 46c829922973241a2a33608633984437, type: 3}
+  - name: music
+    scope: Game2
+    clip: {fileID: 8300000, guid: 1b0dab99f6e874df98cb77ded9749d8f, type: 3}
+  - name: pass
+    scope: Game2
+    clip: {fileID: 8300000, guid: b4d546fdada0742ceb3a9053ad62f15b, type: 3}
+  - name: rim
+    scope: Game2
+    clip: {fileID: 8300000, guid: c9ccc714982324c3caf6af6c819d0dc6, type: 3}
+  - name: shoot
+    scope: Game2
+    clip: {fileID: 8300000, guid: 4152ac63a2a4c448aacfb28a063cc9fe, type: 3}
+  - name: steal
+    scope: Game2
+    clip: {fileID: 8300000, guid: deb35a3b1e2844fd995c7ac4ed9b5caf, type: 3}
+  - name: swish
+    scope: Game2
+    clip: {fileID: 8300000, guid: 8736355d1dc03465f8cf4682a2635314, type: 3}
+  - name: whistle
+    scope: Game2
+    clip: {fileID: 8300000, guid: e1fa8ef73bf7b43aa8c4edc244502797, type: 3}
+  - name: beep
+    scope: Game3
+    clip: {fileID: 8300000, guid: 605e746defda641b3afd5de0c93c4933, type: 3}
+  - name: boost
+    scope: Game3
+    clip: {fileID: 8300000, guid: e16e7885f08294de484fa2c8417b4bcc, type: 3}
+  - name: box
+    scope: Game3
+    clip: {fileID: 8300000, guid: 42d19f3bf5a90443cb0f504a1938fa2d, type: 3}
+  - name: bubble
+    scope: Game3
+    clip: {fileID: 8300000, guid: ca429d69d8a36456680dd007dd1aa066, type: 3}
+  - name: bump
+    scope: Game3
+    clip: {fileID: 8300000, guid: 716972aa2486c4dc5b1c81e484bdff15, type: 3}
+  - name: finish
+    scope: Game3
+    clip: {fileID: 8300000, guid: 89e364d666fc947ee9aa6bd073151b46, type: 3}
+  - name: go
+    scope: Game3
+    clip: {fileID: 8300000, guid: 022f9a56961fb49df93e79a25d3b3d24, type: 3}
+  - name: lap
+    scope: Game3
+    clip: {fileID: 8300000, guid: 7c0408d24d4e84de9a489f031a6902d3, type: 3}
+  - name: music
+    scope: Game3
+    clip: {fileID: 8300000, guid: 24f500a1d494d427d83729a4333d5e7e, type: 3}
+  - name: spin
+    scope: Game3
+    clip: {fileID: 8300000, guid: d178c18fb69a044b9b28d19b6024ca0e, type: 3}
+  - name: star
+    scope: Game3
+    clip: {fileID: 8300000, guid: 80913e879497f4a6bb717df5a16d8ff1, type: 3}
+  - name: boom
+    scope: Game4
+    clip: {fileID: 8300000, guid: a604fd52266fd4d879c9721c4aa4deec, type: 3}
+  - name: boss_music
+    scope: Game4
+    clip: {fileID: 8300000, guid: c18fa0c3b3574499185453f07831d21b, type: 3}
+  - name: charged
+    scope: Game4
+    clip: {fileID: 8300000, guid: cdda9ad5f7441408dad78b0ddb8f2caa, type: 3}
+  - name: deny
+    scope: Game4
+    clip: {fileID: 8300000, guid: 49d3c933cbb5d46659e130c628154de0, type: 3}
+  - name: door
+    scope: Game4
+    clip: {fileID: 8300000, guid: b613b7f37940646248494d1d48a77cae, type: 3}
+  - name: hit
+    scope: Game4
+    clip: {fileID: 8300000, guid: 0ec0db3e7e118480bbd8bec8875d9653, type: 3}
+  - name: hurt
+    scope: Game4
+    clip: {fileID: 8300000, guid: 70221bfa3f4a3461db3d4cb2db9a23f0, type: 3}
+  - name: jump
+    scope: Game4
+    clip: {fileID: 8300000, guid: 0e6538b3cc4394881b87ae19bdfee2a0, type: 3}
+  - name: land
+    scope: Game4
+    clip: {fileID: 8300000, guid: 1c805d6f378a04f6c963a7b935c5c8f6, type: 3}
+  - name: pick
+    scope: Game4
+    clip: {fileID: 8300000, guid: 4e827ec80f7a3479785c6c09ef4df9eb, type: 3}
+  - name: shoot
+    scope: Game4
+    clip: {fileID: 8300000, guid: 6aad90777f80f46518e8a2347f583a09, type: 3}
+  - name: stage_music
+    scope: Game4
+    clip: {fileID: 8300000, guid: 3e709fbb895fe4a9eb6c439dfaeda696, type: 3}
+  - name: win
+    scope: Game4
+    clip: {fileID: 8300000, guid: a45721063da774846869d91e38b519f4, type: 3}
+  - name: bell
+    scope: Game5
+    clip: {fileID: 8300000, guid: d34fdcd447d734e0f91ef8a38a56e323, type: 3}
+  - name: block
+    scope: Game5
+    clip: {fileID: 8300000, guid: bc55ee7b869ff4b55827c4bbeb48aca3, type: 3}
+  - name: fight
+    scope: Game5
+    clip: {fileID: 8300000, guid: 534a8e1d0cefd413db40ea2c91d2388a, type: 3}
+  - name: hit
+    scope: Game5
+    clip: {fileID: 8300000, guid: cfbab2c810b9a4ef9923758dc1b708b1, type: 3}
+  - name: hitbig
+    scope: Game5
+    clip: {fileID: 8300000, guid: 4ec0879c13c3646e6ba242c519913790, type: 3}
+  - name: jump
+    scope: Game5
+    clip: {fileID: 8300000, guid: 8ea021bbb4c2f4e239f83191885fcf47, type: 3}
+  - name: land
+    scope: Game5
+    clip: {fileID: 8300000, guid: 2bb0c9b5eabf7461c94963ede9677dc6, type: 3}
+  - name: music
+    scope: Game5
+    clip: {fileID: 8300000, guid: 2514018ee2ea348879175b36b8d0b919, type: 3}
+  - name: special
+    scope: Game5
+    clip: {fileID: 8300000, guid: 11f03169e5bb74ac583091f31fb9e375, type: 3}
+  - name: super
+    scope: Game5
+    clip: {fileID: 8300000, guid: 0992cc8745763468dbda0ea6f79713d8, type: 3}
+  - name: swing
+    scope: Game5
+    clip: {fileID: 8300000, guid: 8a9ac2af2ea8a4217ab39bb7ce883bd3, type: 3}
+  - name: crit
+    scope: Game6
+    clip: {fileID: 8300000, guid: ecc68b9a39adc4fefba4b8472229abfa, type: 3}
+  - name: heal
+    scope: Game6
+    clip: {fileID: 8300000, guid: a727646866fa742dd9263222f1d179e0, type: 3}
+  - name: hit
+    scope: Game6
+    clip: {fileID: 8300000, guid: 34ec637d8f0894f1997762eb8faa5a04, type: 3}
+  - name: ko
+    scope: Game6
+    clip: {fileID: 8300000, guid: c58a0b17521314d2ab587fdac0d42b44, type: 3}
+  - name: music
+    scope: Game6
+    clip: {fileID: 8300000, guid: 62d65830cd6fa4176b24e258e3523377, type: 3}
+  - name: phase
+    scope: Game6
+    clip: {fileID: 8300000, guid: bbad442194dbb469da3d1a940f5ff369, type: 3}
+  - name: sel
+    scope: Game6
+    clip: {fileID: 8300000, guid: a97111b29203548c490569caef3def5d, type: 3}
+  - name: step
+    scope: Game6
+    clip: {fileID: 8300000, guid: f2bd53e5b96064106879b95ce0bfdf2a, type: 3}
+  - name: boom
+    scope: Game7
+    clip: {fileID: 8300000, guid: 2c945072d998d47ba811637f44734fd1, type: 3}
+  - name: dash
+    scope: Game7
+    clip: {fileID: 8300000, guid: 0ab269b915a944caba534a8701328ef5, type: 3}
+  - name: hurt
+    scope: Game7
+    clip: {fileID: 8300000, guid: 35d5a0bd7cdb24b859162685aad57f4d, type: 3}
+  - name: ko
+    scope: Game7
+    clip: {fileID: 8300000, guid: 0af0a90e082654bdeb14eff65d0d8a3e, type: 3}
+  - name: music
+    scope: Game7
+    clip: {fileID: 8300000, guid: b37ad954f47ca4fe886a8a916c1612a7, type: 3}
+  - name: pew
+    scope: Game7
+    clip: {fileID: 8300000, guid: e17d80bc8e9914056a7e565c985e18dd, type: 3}
+  - name: pick
+    scope: Game7
+    clip: {fileID: 8300000, guid: 402fce894b464456d9e3a2266462d852, type: 3}
+  - name: card
+    scope: Game8
+    clip: {fileID: 8300000, guid: e667f302aa84840e49e2a572f04584be, type: 3}
+  - name: die
+    scope: Game8
+    clip: {fileID: 8300000, guid: c89ff8e14cf9e41e79801f386fff114a, type: 3}
+  - name: heal
+    scope: Game8
+    clip: {fileID: 8300000, guid: b05f5640778b448aa809ef1afc508705, type: 3}
+  - name: hit
+    scope: Game8
+    clip: {fileID: 8300000, guid: 507a438197439485cad8c4c767aebd36, type: 3}
+  - name: music
+    scope: Game8
+    clip: {fileID: 8300000, guid: 40a7c7fad241f45b3b0f150ad84967e7, type: 3}
+  - name: play
+    scope: Game8
+    clip: {fileID: 8300000, guid: 2bfc6cc30ecb04d778877af25ec978b6, type: 3}
+  - name: turn
+    scope: Game8
+    clip: {fileID: 8300000, guid: 56eb38b28c81e437aa9faee30fc382dd, type: 3}
+  - name: hub_music
+    scope: Shared
+    clip: {fileID: 8300000, guid: a3e9a715a189c4cde83340e0880b6239, type: 3}
+  textures:
+  - name: logo
+    scope: Game1
+    texture: {fileID: 2800000, guid: 0278296dd29fa4406b9486af26741626, type: 3}
+  - name: stadium
+    scope: Game1
+    texture: {fileID: 2800000, guid: 260793f71fad3475a9cf75243f266cf0, type: 3}
+  - name: court
+    scope: Game2
+    texture: {fileID: 2800000, guid: c3104dd076caf455db6e8b12fd4ec399, type: 3}
+  - name: logo
+    scope: Game2
+    texture: {fileID: 2800000, guid: fa9cec77cffaf48588e6a10c5d7abad5, type: 3}
+  - name: banana
+    scope: Game3
+    texture: {fileID: 2800000, guid: ac6ce76c1d8fe41ab81234406e8aa536, type: 3}
+  - name: itembox
+    scope: Game3
+    texture: {fileID: 2800000, guid: 4cc371117a08e48f78d8a4a3f54dfc86, type: 3}
+  - name: kart_calico
+    scope: Game3
+    texture: {fileID: 2800000, guid: 50055d6075a64432b9766c809ea069bf, type: 3}
+  - name: kart_glasses
+    scope: Game3
+    texture: {fileID: 2800000, guid: bfd9b79dfb0e142b8bccd8eccef24149, type: 3}
+  - name: kart_penguin
+    scope: Game3
+    texture: {fileID: 2800000, guid: 62d083e3126724424ad173d0963e9741, type: 3}
+  - name: kart_redcat
+    scope: Game3
+    texture: {fileID: 2800000, guid: 2dbe9a6a9e8094608bb7e17c3a789e00, type: 3}
+  - name: kart_sailor
+    scope: Game3
+    texture: {fileID: 2800000, guid: f2b5946032391463f8f7c9beb59bc89f, type: 3}
+  - name: kart_tshirt
+    scope: Game3
+    texture: {fileID: 2800000, guid: 8383e8bcbd2aa47d2ba1576ec48afd76, type: 3}
+  - name: kart_whale
+    scope: Game3
+    texture: {fileID: 2800000, guid: e10b4ec5492024f85803a127cd3a6279, type: 3}
+  - name: kart_whitecat
+    scope: Game3
+    texture: {fileID: 2800000, guid: df4cd453f35e041b4894dae01311c5ca, type: 3}
+  - name: lamp
+    scope: Game3
+    texture: {fileID: 2800000, guid: e3396365a46434316b39664e5ca9cf95, type: 3}
+  - name: logo
+    scope: Game3
+    texture: {fileID: 2800000, guid: b10185ddb57c64bc59908a0a2e6267f1, type: 3}
+  - name: palm
+    scope: Game3
+    texture: {fileID: 2800000, guid: 5be1852aaa1f04ae1967f7d3e2a3e8f1, type: 3}
+  - name: sky_neon
+    scope: Game3
+    texture: {fileID: 2800000, guid: b1a7b8349500a4d79820e883fe44b5ec, type: 3}
+  - name: sky_ocean
+    scope: Game3
+    texture: {fileID: 2800000, guid: f6b2cfc57a94b4be29f27c9bfcabc047, type: 3}
+  - name: sky_snow
+    scope: Game3
+    texture: {fileID: 2800000, guid: 43fe4cfd416e949a9ad53e416c7344fa, type: 3}
+  - name: snowman
+    scope: Game3
+    texture: {fileID: 2800000, guid: 9294c848b35144718994c4f1bf706664, type: 3}
+  - name: bg_calico
+    scope: Game4
+    texture: {fileID: 2800000, guid: 35f9e9562542a42cdbba1c6fac40332a, type: 3}
+  - name: bg_citadel
+    scope: Game4
+    texture: {fileID: 2800000, guid: 88bfdf6135c1b4c3f98f9ce643f18c5e, type: 3}
+  - name: bg_final
+    scope: Game4
+    texture: {fileID: 2800000, guid: 87e7ea41ad4d949b39f129018c301109, type: 3}
+  - name: bg_glasses
+    scope: Game4
+    texture: {fileID: 2800000, guid: 0736a1c9d412b4e4ea9ef1f7291996f7, type: 3}
+  - name: bg_library
+    scope: Game4
+    texture: {fileID: 2800000, guid: 4c9a30cbed2454a66bc587c3f61a3486, type: 3}
+  - name: bg_penguin
+    scope: Game4
+    texture: {fileID: 2800000, guid: 270176c717f254f97a0fcd5c80285fe6, type: 3}
+  - name: bg_redcat
+    scope: Game4
+    texture: {fileID: 2800000, guid: 4892f13a84bc346549b904ea42817876, type: 3}
+  - name: bg_sailor
+    scope: Game4
+    texture: {fileID: 2800000, guid: c2c7f1c3dbd86474090b0799ecb7cb51, type: 3}
+  - name: bg_tshirt
+    scope: Game4
+    texture: {fileID: 2800000, guid: 5d026ace9f0c74098abb5b55e1ea8c48, type: 3}
+  - name: bg_whale
+    scope: Game4
+    texture: {fileID: 2800000, guid: 1f3dcc7c615bd4ad9b25c07bfc8eda4d, type: 3}
+  - name: bossforms_1
+    scope: Game4
+    texture: {fileID: 2800000, guid: 8ae12c35f27894bae9f24fa8a4cc76d1, type: 3}
+  - name: bossforms_2
+    scope: Game4
+    texture: {fileID: 2800000, guid: e20362a3b380040b3bf5714f80c8fa96, type: 3}
+  - name: bossforms_3
+    scope: Game4
+    texture: {fileID: 2800000, guid: 7fd40f256ccf1491ca1e27032e71eb73, type: 3}
+  - name: flyer
+    scope: Game4
+    texture: {fileID: 2800000, guid: 022975f56790148a98e2c60ddb6b2da5, type: 3}
+  - name: logo
+    scope: Game4
+    texture: {fileID: 2800000, guid: 77d77f66e79e24cd887c288de364c433, type: 3}
+  - name: turret
+    scope: Game4
+    texture: {fileID: 2800000, guid: ee21caf0a9fe54939ab5dedc4638be48, type: 3}
+  - name: walker
+    scope: Game4
+    texture: {fileID: 2800000, guid: 35207819e5b91442983042ce5235816b, type: 3}
+  - name: logo
+    scope: Game5
+    texture: {fileID: 2800000, guid: 0acce2d726f834241968b1b6f88e321f, type: 3}
+  - name: roster_ashou
+    scope: Game5
+    texture: {fileID: 2800000, guid: 7f7c64069d6334684b014bd9e120d732, type: 3}
+  - name: roster_hanamaki
+    scope: Game5
+    texture: {fileID: 2800000, guid: 8dcecaf695b6040ef94fd95ae6f46cd0, type: 3}
+  - name: roster_hirin
+    scope: Game5
+    texture: {fileID: 2800000, guid: 6ac1dabd8731f4080b8718740e153bf4, type: 3}
+  - name: roster_koori
+    scope: Game5
+    texture: {fileID: 2800000, guid: 183f352bc41d147469c85029d7f26c07, type: 3}
+  - name: roster_mio
+    scope: Game5
+    texture: {fileID: 2800000, guid: 850cfc77cffb3402183add0349f9f9a4, type: 3}
+  - name: roster_shione
+    scope: Game5
+    texture: {fileID: 2800000, guid: 99852655c0c33475b9f0824f24869222, type: 3}
+  - name: roster_shoheng
+    scope: Game5
+    texture: {fileID: 2800000, guid: 7a8e05e72f7f640de8ac579704b803b4, type: 3}
+  - name: roster_yukidama
+    scope: Game5
+    texture: {fileID: 2800000, guid: 4703eff8ab9934c26b494db48a2b04b8, type: 3}
+  - name: stages_1
+    scope: Game5
+    texture: {fileID: 2800000, guid: 75dd531ceb44840e9a4887e4bfe1dab4, type: 3}
+  - name: stages_2
+    scope: Game5
+    texture: {fileID: 2800000, guid: 359a96d5c96c449fdaba96ee9e03fbf6, type: 3}
+  - name: stages_3
+    scope: Game5
+    texture: {fileID: 2800000, guid: 448e0a8fd9942451f94cc3af7431c380, type: 3}
+  - name: bg
+    scope: Game6
+    texture: {fileID: 2800000, guid: 8a9ab94cbe9874ffc8c710f64eaa9bfc, type: 3}
+  - name: forest
+    scope: Game6
+    texture: {fileID: 2800000, guid: 5197a8ff425664ce486bb1c818c2b412, type: 3}
+  - name: grass
+    scope: Game6
+    texture: {fileID: 2800000, guid: c2ccc92e5aba8415d93f40cd305cd788, type: 3}
+  - name: house
+    scope: Game6
+    texture: {fileID: 2800000, guid: 8b721933b30f14d2f8060d0ce9f40e03, type: 3}
+  - name: logo
+    scope: Game6
+    texture: {fileID: 2800000, guid: 5ddff9e67c9e8434eb6a79ae8a5a04cf, type: 3}
+  - name: mountain
+    scope: Game6
+    texture: {fileID: 2800000, guid: a9bd9e932b4524a28aeab8876547aea6, type: 3}
+  - name: water
+    scope: Game6
+    texture: {fileID: 2800000, guid: 7240f7e0f5e954448b35de419d0a5124, type: 3}
+  - name: bolt
+    scope: Game7
+    texture: {fileID: 2800000, guid: 2289bdaeea1934f688983e2361a36015, type: 3}
+  - name: bush
+    scope: Game7
+    texture: {fileID: 2800000, guid: 8d099600f5f844f099560445ea254e5e, type: 3}
+  - name: crate
+    scope: Game7
+    texture: {fileID: 2800000, guid: e5572c62dae894a6ab3a412d13b27446, type: 3}
+  - name: heart
+    scope: Game7
+    texture: {fileID: 2800000, guid: 1407d6c74b1294e2e99d0401da5eccdf, type: 3}
+  - name: logo
+    scope: Game7
+    texture: {fileID: 2800000, guid: bc75104f0f025495ab164f72d805c5b1, type: 3}
+  - name: back
+    scope: Game8
+    texture: {fileID: 2800000, guid: d5d2b29fee8f6483980f2912adb92db3, type: 3}
+  - name: logo
+    scope: Game8
+    texture: {fileID: 2800000, guid: b1ba1208151124cc5a37cde285e55e5d, type: 3}
+  - name: table
+    scope: Game8
+    texture: {fileID: 2800000, guid: 87c6ed0fa85d342e39948e1a87f08f7d, type: 3}
+  - name: hotel
+    scope: Game9
+    texture: {fileID: 2800000, guid: cc4d6722a99034b9990ea17a4e9d91ab, type: 3}
+  - name: house
+    scope: Game9
+    texture: {fileID: 2800000, guid: 9840fe8758aec4005b2e17a92b5e83c4, type: 3}
+  - name: logo
+    scope: Game9
+    texture: {fileID: 2800000, guid: b9a2f8d22f509441e9c8710bc3bc235a, type: 3}
+  - name: barrel
+    scope: Game10
+    texture: {fileID: 2800000, guid: 7f5ec1989c935481ebf0429afdf2a8b6, type: 3}
+  - name: hull
+    scope: Game10
+    texture: {fileID: 2800000, guid: d316cc60f5bac4d1f982943b4a0cd899, type: 3}
+  - name: logo
+    scope: Game10
+    texture: {fileID: 2800000, guid: 13fca38ea29024585b14001f919ba03a, type: 3}
+  - name: bomber
+    scope: Game11
+    texture: {fileID: 2800000, guid: 1baf33ab321534c2bb038ea52da964eb, type: 3}
+  - name: boss1
+    scope: Game11
+    texture: {fileID: 2800000, guid: 157e7e02952664586aef34cf560557eb, type: 3}
+  - name: boss2
+    scope: Game11
+    texture: {fileID: 2800000, guid: 7f6cab0d315274abd9338e95aa30624e, type: 3}
+  - name: drone
+    scope: Game11
+    texture: {fileID: 2800000, guid: 580c6f0c9ad164502be5ace2886611b6, type: 3}
+  - name: fighter
+    scope: Game11
+    texture: {fileID: 2800000, guid: 91ad344484b784efe94917dead9dfad6, type: 3}
+  - name: jet
+    scope: Game11
+    texture: {fileID: 2800000, guid: 8296d4b32375f401998730480b408d7d, type: 3}
+  - name: logo
+    scope: Game11
+    texture: {fileID: 2800000, guid: a8d1836ec8dae4bb2bd8351c8a4a24c0, type: 3}
+  - name: ocean
+    scope: Game11
+    texture: {fileID: 2800000, guid: 34fe2559ad63e459daca8146f3af50dd, type: 3}
+  - name: space
+    scope: Game11
+    texture: {fileID: 2800000, guid: 39cd0cd3df8ef453f912cac8f3575b14, type: 3}
+  - name: balloon
+    scope: Game12
+    texture: {fileID: 2800000, guid: 9502bade19b7a46f58229ce7496fda6c, type: 3}
+  - name: crate
+    scope: Game12
+    texture: {fileID: 2800000, guid: acf487f375b8b4dd9bbe447877e8a71c, type: 3}
+  - name: house
+    scope: Game12
+    texture: {fileID: 2800000, guid: 4a80c7d366c04405d86b0fe4edfd74c8, type: 3}
+  - name: logo
+    scope: Game12
+    texture: {fileID: 2800000, guid: b046ceaed5cb742de829917296dc9571, type: 3}
+  - name: needle
+    scope: Game12
+    texture: {fileID: 2800000, guid: 18c7188a9587246d993dbe564284d53c, type: 3}
+  - name: potion
+    scope: Game12
+    texture: {fileID: 2800000, guid: 832f861cd69094d88829bec50abd1db5, type: 3}
+  - name: skate
+    scope: Game12
+    texture: {fileID: 2800000, guid: 542c22be71cdd4bd0ba43c4e13704f1f, type: 3}
+  - name: cast_calico
+    scope: Shared
+    texture: {fileID: 2800000, guid: f04b30723484f406a96d930cf278df90, type: 3}
+  - name: cast_glasses
+    scope: Shared
+    texture: {fileID: 2800000, guid: 018a7f2e70e7448ef9add22112486440, type: 3}
+  - name: cast_penguin
+    scope: Shared
+    texture: {fileID: 2800000, guid: c86c762e0b7344e4b96b60137a2e8cb9, type: 3}
+  - name: cast_redcat
+    scope: Shared
+    texture: {fileID: 2800000, guid: 92ca20f346426479d9dcad8562d87190, type: 3}
+  - name: cast_sailor
+    scope: Shared
+    texture: {fileID: 2800000, guid: 6ef728e3d5b0f47168d1bb9dd0545df2, type: 3}
+  - name: cast_tshirt
+    scope: Shared
+    texture: {fileID: 2800000, guid: 9b4ded0f2af6c447791ce6331a5f194b, type: 3}
+  - name: cast_whale
+    scope: Shared
+    texture: {fileID: 2800000, guid: 44d316a8dabcb4b449f020b57117bc51, type: 3}
+  - name: cast_whitecat
+    scope: Shared
+    texture: {fileID: 2800000, guid: 866a20081e1ef489d98de55a8f65f5c4, type: 3}
+  - name: maintex
+    scope: Game1
+    texture: {fileID: 2800000, guid: f74084d82ac464d529bb36e7c61deffa, type: 3}
+  - name: maintex
+    scope: Game2
+    texture: {fileID: 2800000, guid: 386b78c64fa9a4dbb96bc894f7dcead9, type: 3}
+  - name: maintex
+    scope: Game3
+    texture: {fileID: 2800000, guid: 469e0d9492d0e481e92d6007937d7d4f, type: 3}
+  - name: maintex
+    scope: Game3
+    texture: {fileID: 2800000, guid: 9271d74798ce747fbb398abe5dca84de, type: 3}
+  - name: maintex
+    scope: Game3
+    texture: {fileID: 2800000, guid: 74c566ce488a446b48b37644a6d26400, type: 3}
+  materials:
+  - name: field_grass
+    scope: Game1
+    material: {fileID: 2100000, guid: 60c19ec85266b4b309889d6be73013b7, type: 2}
+  - name: court_floor
+    scope: Game2
+    material: {fileID: 2100000, guid: fa30ab5a260a34021bac345713ee702e, type: 2}
+  - name: neon_road
+    scope: Game3
+    material: {fileID: 2100000, guid: ec93d188e2b14424abe440fecdf31be2, type: 2}
+  - name: ocean_road
+    scope: Game3
+    material: {fileID: 2100000, guid: b38b7c2e166a54fd8ba9d37f784c96bd, type: 2}
+  - name: snow_road
+    scope: Game3
+    material: {fileID: 2100000, guid: 6b82857e5c73646db8894a305f7300a7, type: 2}

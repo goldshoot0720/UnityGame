@@ -1,0 +1,16 @@
+{
+    "name": "MoeGames.Game4",
+    "rootNamespace": "MoeGames.Game4",
+    "references": [
+        "MoeGames.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

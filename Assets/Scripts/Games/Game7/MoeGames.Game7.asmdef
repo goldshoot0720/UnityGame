@@ -1,0 +1,16 @@
+{
+    "name": "MoeGames.Game7",
+    "rootNamespace": "MoeGames.Game7",
+    "references": [
+        "MoeGames.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

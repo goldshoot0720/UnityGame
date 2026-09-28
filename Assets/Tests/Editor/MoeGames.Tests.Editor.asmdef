@@ -1,0 +1,36 @@
+{
+    "name": "MoeGames.Tests.Editor",
+    "rootNamespace": "MoeGames.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "MoeGames.Core",
+        "MoeGames.Game1",
+        "MoeGames.Game2",
+        "MoeGames.Game3",
+        "MoeGames.Game4",
+        "MoeGames.Game5",
+        "MoeGames.Game6",
+        "MoeGames.Game7",
+        "MoeGames.Game8",
+        "MoeGames.Game9",
+        "MoeGames.Game10",
+        "MoeGames.Game11",
+        "MoeGames.Game12"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
