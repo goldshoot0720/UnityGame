@@ -74,6 +74,14 @@ namespace MoeGames
                 inst = Instantiate(prefab);
                 inst.name = "Model";
                 foreach (var col in inst.GetComponentsInChildren<Collider>()) Destroy(col);
+                var skin = Skin(Id);
+                if (skin)
+                    foreach (var r in inst.GetComponentsInChildren<Renderer>())
+                    {
+                        var mats = r.sharedMaterials;
+                        for (int k = 0; k < mats.Length; k++) mats[k] = skin;
+                        r.sharedMaterials = mats;
+                    }
             }
             else
             {
@@ -103,6 +111,21 @@ namespace MoeGames
                 graph.Evaluate(0);
             }
             Normalise();
+        }
+
+        static readonly Dictionary<string, Material> skins = new Dictionary<string, Material>();
+
+        /// <summary>The FBX files embed their baked texture ("shaded.png") but import with an untextured
+        /// material, so the texture is extracted to Resources/CharacterTex/&lt;fbx&gt;.png and applied here.</summary>
+        static Material Skin(string id)
+        {
+            if (skins.TryGetValue(id, out var m) && m) return m;
+            int i = Cast.IndexOf(id);
+            var tex = i >= 0 ? Resources.Load<Texture2D>("CharacterTex/" + Cast.Fbx[i]) : null;
+            m = tex ? new Material(Mats.Base) { name = "skin_" + id, color = Color.white, mainTexture = tex } : null;
+            if (m && m.HasProperty("_Glossiness")) m.SetFloat("_Glossiness", 0.15f);
+            skins[id] = m;
+            return m;
         }
 
         /// <summary>Scale the model so it is <see cref="Height"/> tall, feet at y=0, centred.</summary>

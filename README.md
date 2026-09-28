@@ -29,7 +29,11 @@
 
 到 [Releases](https://github.com/goldshoot0720/UnityGame/releases) 下載：
 
-- **網頁版**：`MoeGames-WebGL.zip`（解壓後以任一靜態網頁伺服器開啟 `index.html`）
+- **網頁版**：`MoeGames-WebGL.zip`，解壓後用內附腳本一鍵開啟本機網頁伺服器並自動打開瀏覽器：
+  - Windows：雙擊 `start.bat`（使用內建 PowerShell，免安裝）
+  - macOS：雙擊 `start.command`（第一次被阻擋時：右鍵 →「打開」）
+  - Linux：執行 `./start.sh`
+  - 預設網址 `http://localhost:8080/`，可指定埠號：`start.bat 9000`／`./start.sh 9000`
 - **Android**：`MoeGames.apk`
 - **Windows**：`MoeGames-Windows.zip`（解壓後執行 `MoeGames.exe`）
 - **macOS**：`MoeGames-macOS.zip`（未簽章：第一次開啟請按右鍵 →「打開」）

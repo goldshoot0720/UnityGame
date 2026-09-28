@@ -246,9 +246,6 @@ MonoBehaviour:
   - name: land
     scope: Game5
     clip: {fileID: 8300000, guid: 2bb0c9b5eabf7461c94963ede9677dc6, type: 3}
-  - name: music
-    scope: Game5
-    clip: {fileID: 8300000, guid: 2514018ee2ea348879175b36b8d0b919, type: 3}
   - name: special
     scope: Game5
     clip: {fileID: 8300000, guid: 11f03169e5bb74ac583091f31fb9e375, type: 3}
@@ -294,24 +291,15 @@ MonoBehaviour:
   - name: ko
     scope: Game7
     clip: {fileID: 8300000, guid: 0af0a90e082654bdeb14eff65d0d8a3e, type: 3}
-  - name: music
-    scope: Game7
-    clip: {fileID: 8300000, guid: b37ad954f47ca4fe886a8a916c1612a7, type: 3}
   - name: pew
     scope: Game7
     clip: {fileID: 8300000, guid: e17d80bc8e9914056a7e565c985e18dd, type: 3}
   - name: pick
     scope: Game7
     clip: {fileID: 8300000, guid: 402fce894b464456d9e3a2266462d852, type: 3}
-  - name: card
-    scope: Game8
-    clip: {fileID: 8300000, guid: e667f302aa84840e49e2a572f04584be, type: 3}
   - name: die
     scope: Game8
     clip: {fileID: 8300000, guid: c89ff8e14cf9e41e79801f386fff114a, type: 3}
-  - name: heal
-    scope: Game8
-    clip: {fileID: 8300000, guid: b05f5640778b448aa809ef1afc508705, type: 3}
   - name: hit
     scope: Game8
     clip: {fileID: 8300000, guid: 507a438197439485cad8c4c767aebd36, type: 3}
@@ -324,6 +312,9 @@ MonoBehaviour:
   - name: turn
     scope: Game8
     clip: {fileID: 8300000, guid: 56eb38b28c81e437aa9faee30fc382dd, type: 3}
+  - name: card
+    scope: Game9
+    clip: {fileID: 8300000, guid: 4f21e19fa157b45e1bc345dca02fd07c, type: 3}
   - name: hub_music
     scope: Shared
     clip: {fileID: 8300000, guid: a3e9a715a189c4cde83340e0880b6239, type: 3}

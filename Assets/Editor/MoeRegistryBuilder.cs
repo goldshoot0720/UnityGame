@@ -68,7 +68,11 @@ namespace MoeGames.EditorTools
                     string name = Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
                     var type = AssetDatabase.GetMainAssetTypeAtPath(path);
                     if (type == typeof(AudioClip))
+                    {
+                        // Failed AI generations leave empty placeholder WAVs; skip them so the synth fallback plays.
+                        if (new FileInfo(path).Length < 2048) continue;
                         reg.audio.Add(new MoeRegistry.NamedAudio { name = name, scope = scope, clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path) });
+                    }
                     else if (type == typeof(Texture2D))
                         reg.textures.Add(new MoeRegistry.NamedTexture { name = name, scope = scope, texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path) });
                     else if (type == typeof(Material))

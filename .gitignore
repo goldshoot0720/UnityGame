@@ -31,3 +31,5 @@
 *.aab
 *.unitypackage
 crashlytics-build.properties
+# Android native build temp
+/.utmp/

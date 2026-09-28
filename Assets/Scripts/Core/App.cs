@@ -173,6 +173,15 @@ namespace MoeGames
             GuideBook.Draw();
         }
 
+        /// <summary>Bold width estimate (CJK/full-width ≈ 1 em, ASCII ≈ 0.6 em); dynamic-font CalcSize can
+        /// under-report glyphs that have not been rasterised yet.</summary>
+        static float TextWidthEstimate(string s, float size)
+        {
+            float w = 0;
+            foreach (char ch in s) w += ch < 0x2E80 ? 0.6f : 1.02f;
+            return w * size;
+        }
+
         void DrawHub()
         {
             float W = Gui.W, H = Gui.H, cx = W / 2;
@@ -193,10 +202,20 @@ namespace MoeGames
                 Gui.Panel(r, sel ? new Color(col.r * 0.6f, col.g * 0.6f, col.b * 0.6f, 0.95f) : new Color(0.05f, 0.08f, 0.2f, 0.85f), sel ? Js.Hex("#ffe066") : new Color(1, 1, 1, 0.3f));
                 Gui.Circle(r.x + 30, r.y + 30, 18, col);
                 Gui.Label((i + 1).ToString(), r.x + 30, r.y + 30, 20, Color.white, 0.5f, 0.5f, Color.black);
-                Gui.Label(g.Title, r.x + 56, r.y + 28, 22, sel ? Js.Hex("#ffe066") : Color.white, 0f, 0.5f, Color.black);
-                Gui.Label(g.Genre + (g.Type == null ? "（製作中）" : ""), r.x + 56, r.y + 56, 16, Js.Hex("#9fd2ff"), 0f, 0.5f);
-                if (sel) Gui.Label(g.Blurb, r.x + 14, r.y + 78, 13, new Color(1, 1, 1, 0.8f), 0f, 0.5f, null, r.width - 20);
-                var gb = new Rect(r.xMax - 58, r.y + 8, 50, 26);
+                // Shrink long titles to the card width on narrow screens (指南 sits in the bottom-right corner).
+                float titleSize = 22, titleRoom = r.width - 56 - 8;
+                while (titleSize > 11 && Mathf.Max(Gui.Measure(g.Title, titleSize).x, TextWidthEstimate(g.Title, titleSize)) > titleRoom) titleSize--;
+                Gui.Label(g.Title, r.x + 56, r.y + 28, titleSize, sel ? Js.Hex("#ffe066") : Color.white, 0f, 0.5f, Color.black);
+                if (sel)
+                {
+                    // Selected card: genre moves up and the blurb (≤ 2 lines) fills the rest of the card.
+                    Gui.Label(g.Genre + (g.Type == null ? "（製作中）" : ""), r.x + 56, r.y + 50, 14, Js.Hex("#9fd2ff"), 0f, 0.5f);
+                    float bw = r.width - 20 - 56, bs = 13;
+                    while (bs > 9 && Mathf.Ceil(Gui.Measure(g.Blurb, bs).x / bw) * bs * 1.3f > r.height - 62) bs--;
+                    Gui.Label(g.Blurb, r.x + 10, r.y + 61, bs, new Color(1, 1, 1, 0.85f), 0f, 0f, null, bw);
+                }
+                else Gui.Label(g.Genre + (g.Type == null ? "（製作中）" : ""), r.x + 56, r.y + 56, 16, Js.Hex("#9fd2ff"), 0f, 0.5f);
+                var gb = new Rect(r.xMax - 56, r.yMax - 32, 48, 24);
                 if (GuideBook.Has(i + 1) && Gui.Button(gb, "指南", 13, Js.Hex("#2a6fdb"))) GuideBook.Open(i + 1);
                 else if (Gui.Clicked(r)) Launch(i + 1);
             }

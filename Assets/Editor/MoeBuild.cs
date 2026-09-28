@@ -103,7 +103,28 @@ namespace MoeGames.EditorTools
             return BuildPipeline.BuildPlayer(opts);
         }
 
-        [MenuItem("MoeGames/Build/WebGL")] public static void BuildWebGL() => Report(Build(BuildTarget.WebGL, BuildTargetGroup.WebGL, Path.Combine(Root, "WebGL")));
+        [MenuItem("MoeGames/Build/WebGL")] public static void BuildWebGL() => Report(BuildWeb());
+
+        static BuildReport BuildWeb()
+        {
+            var r = Build(BuildTarget.WebGL, BuildTargetGroup.WebGL, Path.Combine(Root, "WebGL"));
+            if (r.summary.result == BuildResult.Succeeded) PatchWebPage(Path.Combine(Root, "WebGL", "index.html"));
+            return r;
+        }
+
+        /// <summary>Default template tweaks: fill the browser window on desktop too (not a fixed
+        /// 960×600 box), cap the render resolution on phones for frame rate, and a Chinese title.</summary>
+        static void PatchWebPage(string index)
+        {
+            if (!File.Exists(index)) return;
+            var s = File.ReadAllText(index);
+            s = s.Replace("<title>Unity Web Player | MoeGames</title>", "<title>萌友遊戲大廳 MoeGames</title>");
+            s = s.Replace("// config.devicePixelRatio = 1;", "config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);");
+            s = s.Replace("canvas.style.width = \"960px\";", "document.querySelector(\"#unity-container\").className = \"unity-mobile\";");
+            s = s.Replace("canvas.style.height = \"600px\";", "canvas.className = \"unity-mobile\";");
+            s = s.Replace("<body>", "<body style=\"margin:0;background:#0b1433;overflow:hidden\">");
+            File.WriteAllText(index, s);
+        }
         [MenuItem("MoeGames/Build/Android APK")] public static void BuildAndroid() => Report(Build(BuildTarget.Android, BuildTargetGroup.Android, Path.Combine(Root, "Android", "MoeGames.apk")));
         [MenuItem("MoeGames/Build/Windows")] public static void BuildWindows() => Report(Build(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, Path.Combine(Root, "Windows", "MoeGames.exe")));
         [MenuItem("MoeGames/Build/macOS")] public static void BuildMac() => Report(Build(BuildTarget.StandaloneOSX, BuildTargetGroup.Standalone, Path.Combine(Root, "Mac", "MoeGames.app")));
@@ -115,7 +136,7 @@ namespace MoeGames.EditorTools
             var sb = new StringBuilder();
             foreach (var (name, fn) in new (string, Func<BuildReport>)[]
             {
-                ("WebGL", () => Build(BuildTarget.WebGL, BuildTargetGroup.WebGL, Path.Combine(Root, "WebGL"))),
+                ("WebGL", BuildWeb),
                 ("Android", () => Build(BuildTarget.Android, BuildTargetGroup.Android, Path.Combine(Root, "Android", "MoeGames.apk"))),
                 ("Windows", () => Build(BuildTarget.StandaloneWindows64, BuildTargetGroup.Standalone, Path.Combine(Root, "Windows", "MoeGames.exe"))),
                 ("macOS", () => Build(BuildTarget.StandaloneOSX, BuildTargetGroup.Standalone, Path.Combine(Root, "Mac", "MoeGames.app"))),

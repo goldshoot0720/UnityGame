@@ -1,0 +1,5 @@
+*.bat eol=crlf
+*.ps1 eol=crlf
+Tools/WebGLServer/README.txt eol=crlf
+*.sh eol=lf
+*.command eol=lf
