@@ -153,7 +153,8 @@ namespace MoeGames
                 if (!go)
                 {
                     go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    Destroy(go.GetComponent<Collider>());
+                    var col = go.GetComponent<Collider>();
+                    if (col) Destroy(col);
                     go.transform.SetParent(fx.transform, false);
                 }
                 go.SetActive(true);

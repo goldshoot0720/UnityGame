@@ -615,7 +615,8 @@ namespace MoeGames.Game4
                 Gui.Label(c.Name, card.center.x, card.y + 18, 18, sel ? Js.Hex("#ffe066") : Color.white);
                 Gui.Label(c.Weapon.Name, card.center.x, card.y + 42, 13, Js.Hex(c.Weapon.Color));
                 if (Progress.IsCleared(c.Key)) Gui.Label("★通關", card.x + 8, card.y + 60, 12, Js.Hex("#ffe066"), 0f, 0.5f);
-                if (Gui.Clicked(hit)) { if (heroIdx == i) PickHero(); else { heroIdx = i; lineup[i].Act("hop", 0.35f); } }
+                // PickHero swaps in the stage-select lineup, so stop drawing this (stale) screen.
+                if (Gui.Clicked(hit)) { if (heroIdx == i) { PickHero(); return; } heroIdx = i; lineup[i].Act("hop", 0.35f); }
             }
             var h = Data.CHARACTERS[heroIdx];
             Gui.Label($"{h.Name}｜{h.Title}　招牌武器：{h.Weapon.Name} — {h.Weapon.Desc}", cx, H - 20, 16, Color.white, 0.5f, 0.5f, Color.black);
@@ -658,7 +659,7 @@ namespace MoeGames.Game4
                     Gui.Label(h.Name, r.center.x, r.yMax - 16, 15, Color.white);
                     if (beaten) Gui.Label("擊敗", r.center.x, r.y + 40, 22, Js.Hex("#ff6b6b"), 0.5f, 0.5f, Color.black);
                 }
-                if (Gui.Clicked(r)) { if (stageIdx == ki) GoStage(key); else { stageIdx = ki; BuildStageSelectWorld(); } }
+                if (Gui.Clicked(r)) { if (stageIdx == ki) { GoStage(key); return; } stageIdx = ki; BuildStageSelectWorld(); }
             }
             string info;
             if (sel == "final")

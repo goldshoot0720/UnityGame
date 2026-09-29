@@ -152,7 +152,7 @@ namespace MoeGames
             if (In.UpDown) focus = (focus + n - 4) % n;
             if (In.Confirm) { Launch(focus + 1); return; }
             int d = In.DigitDown;
-            if (d > 0) Launch(d);
+            if (d > 0) { Launch(d); return; }
             hub.Rotate(0, Mathf.Sin(t * 0.3f) * 3f * dt, 0);
             if (hubChars != null && Mathf.Repeat(t, 0.9f) < dt)
             {

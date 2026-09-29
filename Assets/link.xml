@@ -1,0 +1,11 @@
+<!-- GameObject.CreatePrimitive adds a collider to every primitive (the code removes it right away).
+     Engine code stripping otherwise removes the collider classes from WebGL/Android builds, and each
+     primitive then logs "Can't add component because class 'BoxCollider' doesn't exist!". -->
+<linker>
+  <assembly fullname="UnityEngine.PhysicsModule">
+    <type fullname="UnityEngine.BoxCollider" preserve="all"/>
+    <type fullname="UnityEngine.SphereCollider" preserve="all"/>
+    <type fullname="UnityEngine.CapsuleCollider" preserve="all"/>
+    <type fullname="UnityEngine.MeshCollider" preserve="all"/>
+  </assembly>
+</linker>
